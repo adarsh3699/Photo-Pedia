@@ -121,7 +121,7 @@ function App() {
 						<div className="imageGrid">
 							{data?.hits?.map((item) => {
 								return (
-									<div key={item.id} onClick={() => handleModal(item)}>
+									<div key={item.id} className="appImageContainer" onClick={() => handleModal(item)}>
 										<img
 											src={item.webformatURL}
 											loading="lazy"

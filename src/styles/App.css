@@ -13,6 +13,10 @@
 	justify-content: center;
 }
 
+.appImageContainer {
+	cursor: pointer;
+}
+
 .appImage {
 	width: 100%;
 	height: 100%;
