@@ -6,6 +6,7 @@ import FootBar from './component/footbar/FootBar';
 import ShowMsg from './component/showMsg/ShowMsg';
 import SearchBox from './component/searchBox/searchBox';
 import PaginationBox from './component/paginationBox/PaginationBox';
+import Modal from './component/modal/Modal';
 import Loader from './component/loader/Loader';
 import './styles/App.css';
 
@@ -16,6 +17,8 @@ function App() {
 	const [page, setpage] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [msg, setMsg] = useState('');
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [modalData, setModalData] = useState({});
 	const [searchText, setSearchText] = useState(new URLSearchParams(window.location.search).get('search') || '');
 
 	const navigate = useNavigate();
@@ -87,6 +90,20 @@ function App() {
 		setSearchText('');
 		window.scrollTo(0, 0);
 	}, [navigate]);
+
+	const handleModal = useCallback(
+		(item) => {
+			if (!isModalOpen) {
+				setModalData(item);
+				document.body.style.overflow = 'hidden';
+			} else {
+				setModalData({});
+				document.body.style.overflow = 'auto';
+			}
+			setIsModalOpen((prev) => !prev);
+		},
+		[isModalOpen]
+	);
 	return (
 		<>
 			<Navbar
@@ -100,21 +117,24 @@ function App() {
 				{!data?.hits && <SearchBox handleSearch={handleSearch} />}
 
 				{data?.hits && (
-					<div className="imageGrid">
-						{data?.hits?.map((item) => {
-							console.log(item);
-							return <img key={item.id} src={item.webformatURL} alt={item.tags} className="appImage" />;
-						})}
-					</div>
-				)}
-
-				{data?.hits && (
-					<PaginationBox
-						handlePageChange={handlePageChange}
-						page={page}
-						setpage={setpage}
-						handleSearch={handleSearch}
-					/>
+					<>
+						<div className="imageGrid">
+							{data?.hits?.map((item) => {
+								return (
+									<div key={item.id} onClick={() => handleModal(item)}>
+										<img src={item.webformatURL} alt={item.tags} className="appImage" />
+									</div>
+								);
+							})}
+						</div>
+						{isModalOpen && <Modal handleModal={handleModal} modalData={modalData} />}
+						<PaginationBox
+							handlePageChange={handlePageChange}
+							page={page}
+							setpage={setpage}
+							handleSearch={handleSearch}
+						/>
+					</>
 				)}
 			</div>
 			<FootBar />
