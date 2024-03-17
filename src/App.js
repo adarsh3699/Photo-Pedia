@@ -122,7 +122,12 @@ function App() {
 							{data?.hits?.map((item) => {
 								return (
 									<div key={item.id} onClick={() => handleModal(item)}>
-										<img src={item.webformatURL} alt={item.tags} className="appImage" />
+										<img
+											src={item.webformatURL}
+											loading="lazy"
+											alt={item.tags}
+											className="appImage"
+										/>
 									</div>
 								);
 							})}

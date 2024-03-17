@@ -24,7 +24,6 @@ function Modal({ handleModal, modalData }) {
 			<div className="modal" ref={modalRef}>
 				<div className="modal-bar">
 					<span className="modalTags">{modalData.tags.toUpperCase()}</span>
-
 					<span className="closeBtn" onClick={handleModal}>
 						&times;
 					</span>

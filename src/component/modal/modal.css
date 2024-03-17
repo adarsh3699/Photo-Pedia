@@ -17,6 +17,7 @@
 	border-radius: 10px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 	color: black;
+	max-width: 90%;
 }
 
 .modal-bar {
@@ -28,22 +29,31 @@
 }
 
 .modalTags {
-	font-weight: 500;
+	font-weight: bold;
+	font-size: 20px;
 }
 
 .closeBtn {
 	cursor: pointer;
 	padding: 0 10px;
-	font-size: 30px;
+	font-size: 35px;
 }
 
 .modal-content {
 	padding: 10px;
+	text-align: center;
 }
 
 .modalImage {
-	height: 70vh;
+	max-width: calc(70vw - 20px);
+	max-height: calc(80vh - 20px);
 	border-radius: 0 0 10px 10px;
-
 	object-fit: cover;
+}
+
+@media screen and (max-width: 800px) {
+	.modalImage {
+		max-width: calc(90vw - 20px);
+		width: unset;
+	}
 }
