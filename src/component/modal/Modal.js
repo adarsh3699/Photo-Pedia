@@ -3,7 +3,7 @@ import './modal.css';
 
 function Modal({ handleModal, modalData }) {
 	const modalRef = useRef();
-	// console.log(modalData);
+
 	useEffect(function () {
 		document.addEventListener('click', handleClickOutside, true);
 
@@ -11,6 +11,7 @@ function Modal({ handleModal, modalData }) {
 		return function () {
 			document.removeEventListener('click', handleClickOutside, true);
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	function handleClickOutside(e) {
