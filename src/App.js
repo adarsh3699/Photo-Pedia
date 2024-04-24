@@ -2,9 +2,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Navbar from './component/navbar/Navbar';
-import FootBar from './component/footbar/FootBar';
+import FootBar from './component/footer/FootBar';
 import ShowMsg from './component/showMsg/ShowMsg';
 import SearchBox from './component/searchBox/searchBox';
+import EmptyCart from './component/emptyCart/EmptyCart';
 import PaginationBox from './component/paginationBox/PaginationBox';
 import Modal from './component/modal/Modal';
 import Loader from './component/loader/Loader';
@@ -14,7 +15,7 @@ const apiBaseUrl = 'https://pixabay.com/api/?key=42924722-dace8e4abf3fa9bc9cc2b7
 
 function App() {
 	const [data, setData] = useState({});
-	const [page, setpage] = useState(1);
+	const [page, setPage] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [msg, setMsg] = useState('');
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,27 +70,6 @@ function App() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const handlePageChange = useCallback(
-		(page) => {
-			if (page < 1) return handleMsgShown('You are already on first page');
-
-			setpage(page);
-			const search = new URLSearchParams(window.location.search).get('search');
-			navigate('/?search=' + search + '&page=' + page);
-			window.scrollTo(0, 0);
-			handleSearch({ target: { searchBox: { value: search } } }, true, page);
-		},
-		[handleMsgShown, navigate, handleSearch]
-	);
-
-	const resetToHomePage = useCallback(() => {
-		navigate('/');
-		setData({});
-		setpage(1);
-		setSearchText('');
-		window.scrollTo(0, 0);
-	}, [navigate]);
-
 	const handleModal = useCallback(
 		(item) => {
 			if (!isModalOpen) {
@@ -103,19 +83,23 @@ function App() {
 		},
 		[isModalOpen]
 	);
+
 	return (
 		<>
 			<Navbar
 				handleSearch={handleSearch}
-				resetToHomePage={resetToHomePage}
+				setData={setData}
+				setPage={setPage}
 				searchText={searchText}
 				setSearchText={setSearchText}
 			/>
 			<div className="appContainer">
 				<Loader isLoading={loading} />
-				{!data?.hits && <SearchBox handleSearch={handleSearch} />}
+				{!data?.hits && !loading && <SearchBox handleSearch={handleSearch} />}
 
-				{data?.hits && (
+				{data?.hits?.length === 0 && <EmptyCart />}
+
+				{data?.hits?.length > 0 && (
 					<>
 						<div className="imageGrid">
 							{data?.hits?.map((item) => {
@@ -133,14 +117,15 @@ function App() {
 						</div>
 						{isModalOpen && <Modal handleModal={handleModal} modalData={modalData} />}
 						<PaginationBox
-							handlePageChange={handlePageChange}
 							page={page}
-							setpage={setpage}
+							setPage={setPage}
+							handleMsgShown={handleMsgShown}
 							handleSearch={handleSearch}
 						/>
 					</>
 				)}
 			</div>
+
 			<FootBar />
 			{msg && <ShowMsg msgText={msg?.text} type={msg?.type} />}
 		</>

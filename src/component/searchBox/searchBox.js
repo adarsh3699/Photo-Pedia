@@ -11,7 +11,7 @@ const SearchBox = ({ handleSearch }) => {
 					Search
 				</button>
 			</form>
-			<p className="searchBoxPara">Search for any object and get the best image all over the internet.</p>
+			<p className="searchBoxPara">Search for anything and get the best image all over the internet.</p>
 		</div>
 	);
 };
